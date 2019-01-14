@@ -1,0 +1,608 @@
+    1  ls
+    2  man ls
+    3  who
+    4  whoami
+    5  cd Z:
+    6  ls
+    7  Z:
+    8  nano localfile
+    9  more localfile.txt
+   10  more localfile
+   11  ls
+   12  more testLocalFile.txt 
+   13  kill
+   14  quit
+   15  exit
+   16  nano firstProgram
+   17  nedit firstProgram.c
+   18  NEdit firstProgram.c
+   19  gedit firstProgram.c
+   20  nano firstProgram.c
+   21  mpicc firstProgram.c -o hello_world
+   22  mpic firstProgram.c -o hello_world
+   23  mpicc firstProgram.c -o hello_world
+   24  nano firstProgram.c
+   25  mpicc firstProgram.c -o hello_world
+   26  nano firstProgram.c
+   27  module load intel
+   28  mpicc firstProgram.c
+   29  nano firstProgram.c
+   30  mpicc firstProgram.c
+   31  nano firstProgram.c
+   32  mpicc firstProgram.c
+   33  mpirun -n 4 ./a.out
+   34  nano firstProgram.c
+   35  mpirun -n 4 ./a.out
+   36  nano firstProgram.c
+   37  mpirun -n 4 ./a.out
+   38  mpicc firstProgram.c
+   39  mpirun -n 4 ./a.out
+   40  qstat -a
+   41  cd /apps/examples/pbs
+   42  ls
+   43  ls -laF
+   44  cp mpi.sub ~
+   45  cd 
+   46  ls
+   47  nano mpi.sub
+   48  more mpi.sub
+   49  nano mpi.sub
+   50  mpicc mpi.sub
+   51  ls
+   52  ./mpi.sub
+   53  history
+   54  ls
+   55  cp firstProgram.c helloWorld2.c
+   56  nano helloWorld2.c
+   57  mpicc helloWorld2.c
+   58  nano helloWorld2.c
+   59  mpicc helloWorld2.c
+   60  nano helloWorld2.c
+   61  mpicc helloWorld2.c
+   62  nano helloWorld2.c
+   63  mpicc helloWorld2.c
+   64  nano helloWorld2.c
+   65  mpicc helloWorld2.c
+   66  ./a.out
+   67  mpicc helloWorld2.c
+   68  ./a.out
+   69  nano helloWorld2.c
+   70  mpicc helloWorld2.c
+   71  exit
+   72  ls
+   73  gedit
+   74  nedit &
+   75  https://www.redhat.com/en
+   76  ls
+   77  nedit firstProgram.c &
+   78  module load intel
+   79  which mpicxx
+   80  mpicc hello.c -o hello
+   81  ls
+   82  mpirun -n 4 ./hello
+   83  ls
+   84  mpirun -n 4 ./a.out
+   85  cd /apps/examples/pds
+   86  cd /apps/examples/pbs/
+   87  ls
+   88  cd ~
+   89  ls
+   90  more mpi.sub 
+   91  nedit mpi.sub &
+   92  qsub mpi.sub
+   93  qstat -a
+   94  qdel 45003
+   95  ls
+   96  ./mpi4cpu_example.o45003
+   97  cat mpi4cpu_example.o45003 
+   98  qsub mpi.sub
+   99  qdel 45012
+  100  ls
+  101  cat mpi4cpu_example.o45012
+  102  qdel 45012
+  103  cat mpi4cpu_example.o45012
+  104  more mpi4cpu_example.o45012
+  105  qsub mpi.sub
+  106  qstat -a
+  107  ls
+  108  cat mpi4cpu_example.o45014
+  109  nedit mpi.sub &
+  110  qsub mpi.sub
+  111  qstat -a
+  112  cat mpi4cpu_example.o45021
+  113  ls
+  114  cat mpi4cpu_example.o45021
+  115  ls
+  116  qsub mpi.sub
+  117  qstat -a
+  118  ls
+  119  mpi4cpu_example.o45025
+  120  cat mpi4cpu_example.o45025
+  121  ls
+  122  qsub mpi.sub
+  123  qstat -a
+  124  cat mpi4cpu_example.o45026
+  125  ls
+  126  rm mpi4cpu_example.o45003
+  127  rm mpi4cpu_example.o45012
+  128  rm mpi4cpu_example.o45014
+  129  rm mpi4cpu_example.o45021
+  130  rm mpi4cpu_example.o45025
+  131  ls
+  132  cat mpi4cpu_example.o45026
+  133  ls
+  134  cp firstProgram.c sendingMessage.c
+  135  nedit sendingMessage.c &
+  136  nedit mpi.sub &
+  137  history
+  138  mpicc sendingMessage.c 
+  139  module load intel
+  140  mpicc sendingMessage.c 
+  141  history
+  142  qsub mpi.sub
+  143  qstat -a
+  144  ls
+  145  mpicc sendingMessage.c 
+  146  qsub mpi.sub
+  147  qstat -a
+  148  ls
+  149  qstat -a
+  150  ls
+  151  cat mpiSendingMsg.o45068 
+  152  rm mpi4cpu_exampleSendingMsg.o45064 
+  153  ls
+  154  cp sendingMessage.c circularCommunication.c
+  155  nedit circularCommunication.c &
+  156  mpicc circularCommunication.c 
+  157  qsub mpi.sub
+  158  qstat -a
+  159  ls
+  160  qstat -a
+  161  ls
+  162  cp circularCommunication.c sendReceive.c
+  163  nedit sendReceive.c &
+  164  ls
+  165  qstat -a
+  166  mpicc sendReceive.c -o output
+  167  qsub mpi.sub
+  168  qstat -a
+  169  ls
+  170  qstat -a
+  171  cat mpiSendReceive.o45089 
+  172  mpicc sendReceive.c -o output
+  173  qsub mpi.sub
+  174  qstat -a
+  175  ls
+  176  rm mpiSendReceive.o45089
+  177  cat mpiSendReceive.o45094 
+  178  mpicc sendReceive.c -o output
+  179  qsub mpi.sub
+  180  rm mpiSendReceive.o45094 
+  181  qstat -a
+  182  ls
+  183  cat mpiSendReceive.o45097 
+  184  qdel 45078
+  185  qstat -a
+  186  nedit circularCommunication.c &
+  187  mpicc circularCommunication.c -o output
+  188  qsub mpi.sub
+  189  qstat -a
+  190  ls
+  191  cat mpiCircularCommunication.o45108 
+  192  mpicc circularCommunication.c -o output
+  193  rm mpiCircularCommunication.o45108 
+  194  qsub mpi.sub
+  195  ls
+  196  car mpiSendingMsg.o45068
+  197  cat mpiSendingMsg.o45068
+  198  cat mpiSendingMsg.o45078
+  199  rm mpiSendingMsg.o45068
+  200  ls
+  201  cat mpiCircularCommunication.o45110 
+  202  ls
+  203  qstat -a
+  204  cat mpiSendReceive.o45097 
+  205  ls
+  206  cat mpiSendingMsg.o45078 
+  207  nedit sendingMessage.c &
+  208  cp sendingMessage.c sendingMessageSlow.c
+  209  nedit sendingMessageSlow.c &
+  210  ls
+  211  nedit circularCommunication.c &
+  212  cp sendingMessageSlow.c circularCommunicationSlow.c 
+  213  rm sendingMessageSlow.c 
+  214  nedit circularCommunicationSlow.c &
+  215  mpicc circularCommunication.c -o output
+  216  qsub mpi.sub
+  217  mpicc circularCommunication.c -o output
+  218  qsub mpi.sub
+  219  mpicc circularCommunication.c -o output
+  220  qsub mpi.sub
+  221  qstat -a
+  222  mpicc circularCommunicationSlow.c -o output
+  223  qsub mpi.sub
+  224  qstat -a
+  225  ls
+  226  qstat -a
+  227  cat mpiCircularCommunicationFast.o45147 
+  228  ls
+  229  qstat -a
+  230  mpicc circularCommunication.c -o output
+  231  qdel 45151
+  232  qsub mpi.sub
+  233  qstat -a
+  234  ls
+  235  cat mpiCircularCommunicationFast.o45151
+  236  rm mpiCircularCommunicationFast.o45151
+  237  rm mpiCircularCommunicationFast.o45147
+  238  ls
+  239  qdel 45166
+  240  mpicc circularCommunication.c -o output
+  241  qsub mpi.sub
+  242  qstat -a
+  243  ls
+  244  cat mpiCircularCommunicationFast.o45166
+  245  cat mpiCircularCommunicationFast.o45167
+  246  rm mpiCircularCommunicationFast.o45166
+  247  mpicc circularCommunicationSlow.c -o output
+  248  qsub mpi.sub
+  249  qstat -a
+  250  ls
+  251  qstat -a
+  252  ls
+  253  qstat -a
+  254  exit
+  255  ls
+  256  nedit circularCommunication.c &
+  257  nedit sendReceive.c &
+  258  nedit mpi.sub &
+  259  cp circularCommunication.c circularCommunication10000.c
+  260  cp sendReceive.c sendReceive10000.c
+  261  nedit circularCommunication10000.c &
+  262  nedit sendReceive10000.c &
+  263  module load intel
+  264  mpicc circularCommunication10000.c -o output
+  265  qsub mpi.sub 
+  266  qstat -a
+  267  qdel 45171
+  268  qstat -a
+  269  ls
+  270  rm mpiCircularCommunicationSlow.o45171 
+  271  cat mpiCircularCommunication10000.o45260 
+  272  mpicc sendReceive10000.c -o output
+  273  qsub mpi.sub 
+  274  qstat -a
+  275  ls
+  276  qstat -a
+  277  cat mpiSendReceive10000.o45261 
+  278  cat mpiCircularCommunication10000.o45260 
+  279  mpicc circularCommunication10000.c -o output
+  280  qsub mpi.sub 
+  281  qstat -a
+  282  ls
+  283  cat mpiCircularCommunication10000.o45289 
+  284  rm mpiCircularCommunication10000.o452
+  285  rm mpiCircularCommunication10000.o45289 
+  286  rm mpiCircularCommunication10000.o45260 
+  287  mpicc circularCommunication10000.c -o output
+  288  qsub mpi.sub 
+  289  ls
+  290  qstat -a
+  291  cat mpiCircularCommunication10000.o45293 
+  292  rm mpiCircularCommunication10000.o45293 
+  293  mpicc circularCommunication10000.c -o output
+  294  qsub mpi.sub 
+  295  qstat -a
+  296  cat mpiCircularCommunication10000.o45295 
+  297  mpicc sendReceive10000.c -o output
+  298  qsub mpi.sub 
+  299  qstat -a
+  300  ls
+  301  rm mpiSendReceive10000.o45261
+  302  cat mpiSendReceive10000.o45298 
+  303  cat mpiCircularCommunication10000.o45295 
+  304  rm mpiCircularCommunication10000.o45295 
+  305  mpicc circularCommunication10000.c -o output
+  306  qsub mpi.sub
+  307  qstat -a
+  308  ls
+  309  qstat -a
+  310  qdel 45304
+  311  rm mpiCircularCommunication10000.o45304 
+  312  mpicc circularCommunication10000.c -o output
+  313  qsub mpi.sub
+  314  qstat -a
+  315  qdel 45309
+  316  mpicc circularCommunication10000.c -o output
+  317  qsub mpi.sub
+  318  qstat -a
+  319  qdel 45316
+  320  mpicc circularCommunication10000.c -o output
+  321  qsub mpi.sub
+  322  qstat -a
+  323  ls
+  324  cat mpiCircularCommunication10000.o45321
+  325  cat mpiSendReceive10000.o45298 
+  326  rm mpiCircularCommunication10000.o45309
+  327  rm mpiCircularCommunication10000.o45316
+  328  cp circularCommunication10000.c circularCommunicationNonBlocking10000.c
+  329  nedit circularCommunicationNonBlocking10000.c &
+  330  mpicc circularCommunicationNonBlocking10000.c -o output
+  331  qsub mpi.sub
+  332  qstat -a
+  333  qdel 45333
+  334  ls
+  335  mpicc circularCommunicationNonBlocking10000.c -o output
+  336  qsub mpi.sub
+  337  qstat -a
+  338  ls
+  339  cat mpiCircularCommunicationNonBlocking10000.o45335 
+  340  cat mpiSendReceive10000.o45298 
+  341  nedit firstProgram.c &
+  342  ls
+  343  cat sendingMessage.c 
+  344  cp firstProgram.c sendReceiveTest.c
+  345  nedit sendReceiveTest.c &
+  346  mpicc sendReceiveTest.c -o output
+  347  qsub mpi.sub
+  348  qstat -a
+  349  qdel 45360
+  350  mpicc sendReceiveTest.c -o output
+  351  rm sendReceiveTest.o45360 
+  352  qsub mpi.sub
+  353  qstat -a
+  354  qdel 45361
+  355  mpicc sendReceiveTest.c -o output
+  356  qsub mpi.sub
+  357  qstat -a
+  358  nedit dotProductComputation.c &
+  359  ls
+  360  nedit dotProductComputation.c &
+  361  nedit mpi.sub &
+  362  nedit circularCommunicationNonBlocking10000.c &
+  363  ls
+  364  module load intel
+  365  mpicc dotProductComputation.c -o output
+  366  qsub mpi.sub
+  367  qstat -a
+  368  qdel 45368
+  369  ls
+  370  rm mpiSendReceiveTest.o45368
+  371  mpicc dotProductComputation.c -o output
+  372  qsub mpi.sub
+  373  qstat -a
+  374  ls
+  375  cat mpiDotProductComputation.o45469 
+  376  tor size
+  377  The first vector
+  378  The second vector
+  379  Enter the vector size
+  380  Enter the vector sizeEnter the vector size
+  381  Enter the vector size
+  382  rm mpiDotProductComputation.o45469 
+  383  mpicc dotProductComputation.c -o output
+  384  qsub mpi.sub
+  385  qstat -a
+  386  cat mpiDotProductComputation.o45474 
+  387  rm mpiDotProductComputation.o45474 
+  388  mpicc dotProductComputation.c -o output
+  389  qsub mpi.sub
+  390  qstat -a
+  391  cat mpiDotProductComputation.o45476 
+  392  rm mpiDotProductComputation.o45476 
+  393  mpicc dotProductComputation.c -o output
+  394  qsub mpi.sub
+  395  qstat -a
+  396  ls
+  397  qstat -a
+  398  cat mpiDotProductComputation.o45483 
+  399  rm mpiDotProductComputation.o45483 
+  400  mpicc dotProductComputation.c -o output
+  401  qsub mpi.sub
+  402  qstat -a
+  403  cat mpiDotProductComputation.o45485 
+  404  rm mpiDotProductComputation.o45485 
+  405  mpicc dotProductComputation.c -o output
+  406  qsub mpi.sub
+  407  qstat -a
+  408  cat mpiDotProductComputation.o45486 
+  409  rm mpiDotProductComputation.o45486 
+  410  mpicc dotProductComputation.c -o output
+  411  qsub mpi.sub
+  412  qstat -a
+  413  cat mpiDotProductComputation.o45487 
+  414  rm mpiDotProductComputation.o45487 
+  415  mpicc dotProductComputation.c -o output
+  416  qsub mpi.sub
+  417  qstat -a
+  418  cat mpiDotProductComputation.o45489 
+  419  rm mpiDotProductComputation.o45489 
+  420  mpicc dotProductComputation.c -o output
+  421  qsub mpi.sub
+  422  qstat -a
+  423  cat mpiDotProductComputation.o45498 
+  424  rm mpiDotProductComputation.o45498 
+  425  mpicc dotProductComputation.c -o output
+  426  qsub mpi.sub
+  427  qstat -a
+  428  cat mpiDotProductComputation.o45499 
+  429  rm mpiDotProductComputation.o45499 
+  430  mpicc dotProductComputation.c -o output
+  431  qsub mpi.sub
+  432  qstat -a
+  433  cat mpiDotProductComputation.o45503 
+  434  rm mpiDotProductComputation.o45503 
+  435  mpicc dotProductComputation.c -o output
+  436  qsub mpi.sub
+  437  qstat -a
+  438  cat mpiDotProductComputation.o45504 
+  439  mpicc dotProductComputation.c -o output
+  440  qsub mpi.sub
+  441  rm mpiDotProductComputation.o45504 
+  442  qstat -a
+  443  cat mpiDotProductComputation.o45505 
+  444  mpicc dotProductComputation.c -o output
+  445  qsub mpi.sub
+  446  rm mpiDotProductComputation.o45505 
+  447  qstat -a
+  448  cat mpiDotProductComputation.o45507 
+  449  mpicc dotProductComputation.c -o output
+  450  qsub mpi.sub
+  451  rm mpiDotProductComputation.o45507 
+  452  qstat -a
+  453  cat mpiDotProductComputation.o45508 
+  454  mpicc dotProductComputation.c -o output
+  455  qsub mpi.sub
+  456  rm mpiDotProductComputation.o45508 
+  457  qstat -a
+  458  cat mpiDotProductComputation.o45509 
+  459  mpicc dotProductComputation.c -o output
+  460  nedit inputDotProductComp.txt
+  461  nedit inputDotProductComp.txt &
+  462  mpicc dotProductComputation.c -o output
+  463  mpirun -n 4 ./output < inputDotProductComp.txt 
+  464  mpicc dotProductComputation.c -o output < inputDotProductComp.txt 
+  465  mpirun -n 4 ./output < inputDotProductComp.txt 
+  466  mpicc dotProductComputation.c -o output
+  467  mpirun -n 4 ./output
+  468  mpicc dotProductComputation.c -o output
+  469  mpirun -n 1 ./output
+  470  mpicc dotProductComputation.c -o output < inputDotProductComp.txt 
+  471  mpicc dotProductComputation.c -o output
+  472  mpirun -n 1 ./output < inputDotProductComp.txt 
+  473  mpicc dotProductComputation.c -o output
+  474  mpirun -n 1 ./output < inputDotProductComp.txt 
+  475  mpicc dotProductComputation.c -o output
+  476  mpirun -n 1 ./output < inputDotProductComp.txt 
+  477  mpicc dotProductComputation.c -o output
+  478  mpirun -n 1 ./output < inputDotProductComp.txt 
+  479  ls
+  480  nedit mpi.sub &
+  481  nedit dotProductComputation.c &
+  482  cat mpiDotProductComputation.o45509 
+  483  mpirun -n 1 output inputDotProductComp.txt 
+  484  module load intel
+  485  mpirun -n 1 ./output < inputDotProductComp.txt 
+  486  mpicc dotProductComputation.c -o output
+  487  mpirun -n 1 ./output < inputDotProductComp.txt 
+  488  nedit inputDotProductComp.txt &
+  489  mpicc dotProductComputation.c -o output
+  490  nedit inputDotProductComp.txt &
+  491  mpirun -n 1 ./output < inputDotProductComp.txt 
+  492  mpicc dotProductComputation.c -o output
+  493  mpirun -n 1 ./output < inputDotProductComp.txt 
+  494  mpicc dotProductComputation.c -o output
+  495  mpirun -n 1 ./output < inputDotProductComp.txt 
+  496  mpicc dotProductComputation.c -o output
+  497  mpirun -n 1 ./output < inputDotProductComp.txt 
+  498  mpicc dotProductComputation.c -o output
+  499  mpirun -n 1 ./output < inputDotProductComp.txt 
+  500  mpicc dotProductComputation.c -o output
+  501  mpirun -n 1 ./output < inputDotProductComp.txt 
+  502  mpicc dotProductComputation.c -o output
+  503  mpirun -n 1 ./output < inputDotProductComp.txt 
+  504  mpicc dotProductComputation.c -o output
+  505  mpirun -n 1 ./output < inputDotProductComp.txt 
+  506  mpicc dotProductComputation.c -o output
+  507  mpirun -n 1 ./output < inputDotProductComp.txt 
+  508  mpicc dotProductComputation.c -o output
+  509  mpirun -n 1 ./output < inputDotProductComp.txt 
+  510  mpicc dotProductComputation.c -o output
+  511  mpirun -n 1 ./output < inputDotProductComp.txt 
+  512  mpicc dotProductComputation.c -o output
+  513  mpirun -n 1 ./output < inputDotProductComp.txt 
+  514  mpirun -n 4 ./output < inputDotProductComp.txt 
+  515  mpicc dotProductComputation.c -o output
+  516  mpirun -n 4 ./output < inputDotProductComp.txt 
+  517  mpicc dotProductComputation.c -o output
+  518  mpirun -n 4 ./output < inputDotProductComp.txt 
+  519  mpicc dotProductComputation.c -o output
+  520  mpirun -n 4 ./output < inputDotProductComp.txt 
+  521  mpicc dotProductComputation.c -o output
+  522  mpirun -n 4 ./output < inputDotProductComp.txt 
+  523  mpicc dotProductComputation.c -o output
+  524  mpirun -n 4 ./output < inputDotProductComp.txt 
+  525  mpirun -n 1 ./output < inputDotProductComp.txt 
+  526  mpirun -n 4 ./output < inputDotProductComp.txt 
+  527  mpicc dotProductComputation.c -o output
+  528  mpirun -n 4 ./output < inputDotProductComp.txt 
+  529  mpicc dotProductComputation.c -o output
+  530  mpirun -n 4 ./output < inputDotProductComp.txt 
+  531  mpicc dotProductComputation.c -o output
+  532  mpirun -n 4 ./output < inputDotProductComp.txt 
+  533  mpicc dotProductComputation.c -o output
+  534  mpirun -n 4 ./output < inputDotProductComp.txt 
+  535  mpicc dotProductComputation.c -o output
+  536  mpirun -n 4 ./output < inputDotProductComp.txt 
+  537  mpicc dotProductComputation.c -o output
+  538  mpirun -n 4 ./output < inputDotProductComp.txt 
+  539  mpicc dotProductComputation.c -o output
+  540  mpirun -n 4 ./output < inputDotProductComp.txt 
+  541  mpicc dotProductComputation.c -o output
+  542  mpirun -n 4 ./output < inputDotProductComp.txt 
+  543  mpicc dotProductComputation.c -o output
+  544  mpirun -n 4 ./output < inputDotProductComp.txt 
+  545  mpicc dotProductComputation.c -o output
+  546  mpirun -n 4 ./output < inputDotProductComp.txt 
+  547  mpirun -n 1 ./output < inputDotProductComp.txt 
+  548  mpirun -n 4 ./output < inputDotProductComp.txt 
+  549  mpicc dotProductComputation.c -o output
+  550  mpirun -n 4 ./output < inputDotProductComp.txt 
+  551  mpicc dotProductComputation.c -o output
+  552  mpirun -n 4 ./output < inputDotProductComp.txt 
+  553  mpicc dotProductComputation.c -o output
+  554  mpirun -n 4 ./output < inputDotProductComp.txt 
+  555  mpicc dotProductComputation.c -o output
+  556  mpirun -n 4 ./output < inputDotProductComp.txt 
+  557  mpicc dotProductComputation.c -o output
+  558  mpirun -n 4 ./output < inputDotProductComp.txt 
+  559  mpirun -n 16 ./output < inputDotProductComp.txt 
+  560  mpirun -n 4 ./output < inputDotProductComp.txt 
+  561  mpirun -n 2 ./output < inputDotProductComp.txt 
+  562  mpirun -n 8 ./output < inputDotProductComp.txt 
+  563  mpicc dotProductComputation.c -o output
+  564  mpirun -n 8 ./output < inputDotProductComp.txt 
+  565  mpirun -n 4 ./output < inputDotProductComp.txt 
+  566  mpicc dotProductComputation.c -o output
+  567  mpirun -n 4 ./output < inputDotProductComp.txt 
+  568  mpirun -n 8 ./output < inputDotProductComp.txt 
+  569  mpicc dotProductComputation.c -o output
+  570  mpirun -n 4 ./output < inputDotProductComp.txt 
+  571  mpirun -n 16 ./output < inputDotProductComp.txt 
+  572  mpirun -n 4 ./output < inputDotProductComp.txt 
+  573  ls
+  574  mkdir softwareProject
+  575  cd softwareProject/
+  576  pwd
+  577  clear
+  578  s
+  579  ls
+  580  cd SourceCode/
+  581  ls
+  582  chmod +x scriptMake.sh 
+  583  ./scriptMake.sh 
+  584  ls
+  585  make
+  586  ls
+  587  nedit Makefile &
+  588  nano Makefile &
+  589  nano Makefile
+  590  make
+  591  g++ -std=c++11 *.cpp -o outputTest
+  592  ls
+  593  ./outputTest 
+  594  ls
+  595  rm outputTest
+  596  nano Makefile
+  597  rm Makefile 
+  598  make
+  599  ls
+  600  make > LALALALLALA.txt
+  601  rm LALALALLALA.txt 
+  602  cat Makefile 
+  603  make
+  604  ls
+  605  ./simulationOutput 
+  606  ls
+  607  cd ProjectHPC/
+  608  history > history.txt

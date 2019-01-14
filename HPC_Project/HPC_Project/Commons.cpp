@@ -1,5 +1,21 @@
 #include "Commons.h"													//include the header of the class
 
+
+int Commons::getMyRank() {
+	int myrank;
+	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);
+	return myrank;
+}
+
+int Commons::getNpes() {
+	int npes;
+	MPI_Comm_size(MPI_COMM_WORLD, &npes);
+	return npes;
+}
+
+
+
+
 double Commons::finitx(double x) {										//declaration of the function f(x)
 	if (x <= 50 || x >= 110)											//if x is lower than 50 or higher than 110 =>
 		return 0.0;														//return 0

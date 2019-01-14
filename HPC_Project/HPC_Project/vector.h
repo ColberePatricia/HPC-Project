@@ -5,6 +5,7 @@
 #include <fstream>  //File IO operations
 #include <stdexcept> //provides exceptions
 #include <vector>  // std vector upon which our Vector is based
+#include "Commons.h"
 
 
 /**

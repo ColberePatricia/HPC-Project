@@ -47,33 +47,30 @@ vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {		
 
 void ImplicitScheme::resultDt(const double Dt) {														//declare the function resultDt wich is called in the main class
 	Commons fx;																							//create an object fx wich can call all the variable of the class commons
-	// cout << "\nResult for dt = " << Dt << ": \n";													//print the value of delta t
 
 	if (fx.u*Dt / fx.dx <= 1) {																			//if the CFL condition is fulfilled =>
 		vector<double> solution;																		//create a vector of double solution
-		// cout << "DELTA X: " << fx.dx << "---- X TOT: " << fx.xTot << "\n";							//print the value of delta x
-		cout << "Delta t: " << Dt << "\n";																//print the value of delta t
+		if (fx.getMyRank() == 0) {
+			cout << "Delta t: " << Dt << "\n";																//print the value of delta t
+		}
 		solution = fx.finit();																			//affect the vector from the function finit in commons to solution
 		vector <double> error(solution.size());															//create a vector of double error which has the same size as solution 
 		double n = 0;																					//create a double n equal to 0
 		while (n <= 0.52) {																				//create a loop while n is lower than 0.5 plus dx
 			// cout << "NUMERICAL solution for n = " << n << ":\n";										//print a title and the value of n
-			cout << "n = " << n << "\n";																//print the value of n
-			fx.showVector(solution);																	//print the value of the vector solution
-			/*cout << "\n";																				//print an enter
-			cout << "ANALYTICAL solution for n = " << n << ":\n";										//print a title and the value of n 
-			fx.showVector(fx.analyticalSolution(n));													//print the value of the vector analytical
-			cout << "\n";*/																				//print an enter
+			if (fx.getMyRank() == 0) {
+				cout << "n = " << n << "\n";																//print the value of n
+				fx.showVector(solution);																	//print the value of the vector solution
+
+			}
+
 			for (unsigned int i = 0; i < solution.size(); i++)											//create a loop with an index i until i reach the size of solution
 				error[i] = solution[i] - fx.analyticalSolution(n)[i];									//set the error at index i the differrence between the solution and the analytical solution
-			/*
-			cout << "ERROR for n = " << n << ":\n";														//print a title and the value of n
-			fx.showVector(error);																		//print the vector error
-			*/
-			cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";	//print the value of the norm unifrom apply to error
-			cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";		//print the value of the norm two apply to error
-			/*cout << "\n";																				//print an enter
-			cout << "\n";*/																				//print an enter
+			
+			if (fx.getMyRank() == 0) {
+				cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";	//print the value of the norm unifrom apply to error
+				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";		//print the value of the norm two apply to error
+			}
 
 
 			solution = ImplicitScheme_nplus1(solution, Dt);												//called the function which calculate the vector for f at n+1
@@ -82,7 +79,9 @@ void ImplicitScheme::resultDt(const double Dt) {														//declare the func
 		}
 	}
 	else {																								//if the CFL condition is not fulfilled =>
-		cout << "The CFL condition isn't respected, CFL = " << (fx.u*Dt / fx.dx);						//print the value of the CFL condition
+		if (fx.getMyRank() == 0) {
+			cout << "The CFL condition isn't respected, CFL = " << (fx.u*Dt / fx.dx);						//print the value of the CFL condition
+		}
 	}
 }
 

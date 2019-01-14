@@ -7,6 +7,7 @@
 #include <vector>
 #include <math.h>
 #include <fstream>
+#include <mpi.h>
 using namespace std;
 
 
@@ -26,6 +27,10 @@ public:
 	const double dta = 0.002;
 	const double dtb = 0.001;
 	const double dtc = 0.0005;
+
+
+	int getMyRank();
+	int getNpes();
 
 
 /*!

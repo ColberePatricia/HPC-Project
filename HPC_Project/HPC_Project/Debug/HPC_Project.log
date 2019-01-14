@@ -1,9 +1,2 @@
-﻿  Commons.cpp
-  ExplicitSchemes.cpp
-  ExplicitUpwindFTBS.cpp
-  ImplicitFTCS.cpp
-  ImplicitSchemes.cpp
-  ImplicitUpwindFTBS.cpp
-  Main.cpp
-  Generating Code...
+﻿  ExplicitUpwindFTBS.cpp
   HPC_Project.vcxproj -> D:\Cranfield work\High Performance Technical Computing\HPC_Project\Debug\HPC_Project.exe
