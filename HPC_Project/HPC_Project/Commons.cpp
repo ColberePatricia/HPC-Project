@@ -1,6 +1,16 @@
 #include "Commons.h"													//include the header of the class
 
 
+int Commons::numberOfPointsPerResult() {
+	return (int)(xTot*(1 / dx));
+}
+
+int Commons::numberOfPointsPerProcessor() {
+	return (int)((numberOfPointsPerResult() / getNpes()) + 1);
+}
+
+
+
 int Commons::getMyRank() {
 	int myrank;
 	MPI_Comm_rank(MPI_COMM_WORLD, &myrank);

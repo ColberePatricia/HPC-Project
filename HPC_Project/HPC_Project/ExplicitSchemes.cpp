@@ -3,7 +3,6 @@
 
 void ExplicitScheme::resultDt(const double Dt) {																//declare the only function of this class which handle the calculation and the print of the scheme
 	Commons fx;																									//call the class common thought the varialbe fx
-	// cout << "\nResult for dt = " << Dt << ": \n";															//print the value of the delta t
 
 	if (fx.u*Dt / fx.dx <= 1) {																					//if the CFL is fulfilled =>
 		vector<double> solution;																				//intiate a vector of double solution
@@ -18,7 +17,6 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 			
 			if (fx.getMyRank() == 0) {
 				cout << "n = " << n << "\n";
-				cout << "SHOWING VECT, WITH RANK: " << fx.getMyRank() << "\n";
 				fx.showVector(solution); // Show the numerical solution
 			}
 					

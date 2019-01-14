@@ -51,13 +51,11 @@ void ImplicitScheme::resultDt(const double Dt) {														//declare the func
 	if (fx.u*Dt / fx.dx <= 1) {																			//if the CFL condition is fulfilled =>
 		vector<double> solution;																		//create a vector of double solution
 		if (fx.getMyRank() == 0) {
-			cout << "Delta t: " << Dt << "\n";																//print the value of delta t
 		}
 		solution = fx.finit();																			//affect the vector from the function finit in commons to solution
 		vector <double> error(solution.size());															//create a vector of double error which has the same size as solution 
 		double n = 0;																					//create a double n equal to 0
 		while (n <= 0.52) {																				//create a loop while n is lower than 0.5 plus dx
-			// cout << "NUMERICAL solution for n = " << n << ":\n";										//print a title and the value of n
 			if (fx.getMyRank() == 0) {
 				cout << "n = " << n << "\n";																//print the value of n
 				fx.showVector(solution);																	//print the value of the vector solution

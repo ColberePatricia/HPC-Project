@@ -28,6 +28,9 @@ public:
 	const double dtb = 0.001;
 	const double dtc = 0.0005;
 
+	int numberOfPointsPerResult();
+	int numberOfPointsPerProcessor();
+
 
 	int getMyRank();
 	int getNpes();
