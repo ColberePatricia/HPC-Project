@@ -15,10 +15,10 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 		double n = 0;																							//initate a double n at 0
 		while (n <= 0.52) {																						//create loop until n <0.5
 			
-			if (fx.getMyRank() == 0) {
+			/*if (fx.getMyRank() == 0) {
 				cout << "n = " << n << "\n";
 				fx.showVector(solution); // Show the numerical solution
-			}
+			}*/
 					
 			
 			
