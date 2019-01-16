@@ -30,18 +30,18 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 				//cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
 			}
 
-			if (fx.getMyRank() == 0) {
+			/*if (fx.getMyRank() == 0) {
 				cout << "OLD SOLUTION\n";
 				fx.showVector(solution);
-			}
+			}*/
 
 			solution = ExplicitScheme_nplus1(solution, Dt);														//call the function which calculate the solution at n+1
 			n += Dt;																							//add delta t to n
 
-			if (fx.getMyRank() == 0) {
+			/*if (fx.getMyRank() == 0) {
 				cout << "NEW SOLUTION\n";
 				fx.showVector(solution);
-			}
+			}*/
 			//MPI_Bcast(solution.data(), solution.size(), MPI_INT, 0, MPI_COMM_WORLD);
 		}
 	}
