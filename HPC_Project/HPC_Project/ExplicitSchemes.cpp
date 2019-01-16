@@ -26,15 +26,23 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 				error[i] = solution[i] - fx.analyticalSolution(n)[i];											//set to the vector at index i the diffrence between the solution and the analytical solution
 			
 			if (fx.getMyRank() == 0) {
-				cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";			//Print the result of the uniform norm
-				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
+				//cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";			//Print the result of the uniform norm
+				//cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
 			}
-			
 
+			if (fx.getMyRank() == 0) {
+				cout << "OLD SOLUTION\n";
+				fx.showVector(solution);
+			}
 
 			solution = ExplicitScheme_nplus1(solution, Dt);														//call the function which calculate the solution at n+1
 			n += Dt;																							//add delta t to n
 
+			if (fx.getMyRank() == 0) {
+				cout << "NEW SOLUTION\n";
+				fx.showVector(solution);
+			}
+			//MPI_Bcast(solution.data(), solution.size(), MPI_INT, 0, MPI_COMM_WORLD);
 		}
 	}
 	else {																										//if the CFL condition is not fulfilled =>

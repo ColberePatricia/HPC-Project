@@ -6,19 +6,38 @@ vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt,
 	vector <double> res;
 	const double c = (double)fx.u*Dt / fx.dx;																//define the value of c
 	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
-																											// TODO
-	res.push_back(firstValue);
+
+	if (firstIndex == 0)
+		res.push_back(firstValue);
 
 	if (lastIndex > fx.numberOfPointsPerResult() - 1)
 		lastIndex = fx.numberOfPointsPerResult() - 1;
-
+	
+	cout << "RES SHOULD BE:\n";
 	for (int xIndex = firstIndex; xIndex <= lastIndex; xIndex++) {																					//create loop while x is lower than Xtot (400)
 		res.push_back(((1 - c)*previousSolution[xIndex] + c * previousSolution[xIndex - 1]));				//add the value of the scheme to the vector res
-		if (fx.getMyRank() == 1) {
-			cout << "RES 0 SENT: " << res[0] << "\n";
-			cout << "1st TERM: " << previousSolution[xIndex] << "\n";
-			cout << "2nd TERM: " << previousSolution[xIndex-1] << "\n";
+		
+		if (fx.getMyRank() == 0) { // && (previousSolution[xIndex]!=0|| previousSolution[xIndex - 1]!=0)
+			cout << res.back() << "; ";
+			/*cout << "1st TERM: " << (1-c)*previousSolution[xIndex] << "\n";
+			cout << "2nd TERM: " << c*previousSolution[xIndex-1] << "\n";*/
 		}
+	}
+	cout << "\n";
+
+	/*if (fx.getMyRank() == 1) {
+		cout << "RANK 1\n";
+		fx.showVector(previousSolution);
+		cout << "last Index: " << lastIndex << "\n";
+		cout << "1st Index: " << firstIndex << "\n";
+	}*/
+	if (fx.getMyRank() == 0) {
+		cout << "RANK 0\n PREVIOUS SOLUTION\n";
+		fx.showVector(previousSolution);
+		cout << "NEXT RESULT\n";
+		fx.showVector(res);
+		cout << "last Index: " << lastIndex << "\n";
+		cout << "1st Index: " << firstIndex << "\n";
 	}
 
 	return res;																								//return the vector of double res
@@ -45,8 +64,9 @@ vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previou
 	res = ExplicitSchemeUntiln(previousSolution, Dt, firstValue, lastIndex);
 
 	if (fx.getMyRank() + 1 != fx.getNpes()) { // my rank is not the last, I need to send the value of the last point to the next processor
-		MPI_Send(&res.back(), 1, MPI_DOUBLE, fx.getMyRank() + 1, 1, MPI_COMM_WORLD);
-		//cout << "VALUE : " << res.back() << " SENT!\n";
+		MPI_Send(&res[(res.size()-2)], 1, MPI_DOUBLE, fx.getMyRank() + 1, 1, MPI_COMM_WORLD);
+		/*if (fx.getMyRank() == 0 && res[(res.size() - 2)] != 0)
+			cout << "SENT VALUE: " << res[(res.size() - 2)] << "\n";*/
 
 	}
 	
