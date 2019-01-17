@@ -34,6 +34,11 @@ public:
  *  \param f The vector f
  *  \return Return a vector of the solution at time n + 1
  */
+
+	int numberOfPointsPerResult(Matrix A);
+	int numberOfPointsPerProcessor(Matrix A);
+
+	vector <double> ThomasAlgorithmUntiln(Matrix A, vector <double> f, double firstValue, int lastIndex);
 	vector <double> ThomasAlgorithm(Matrix A, vector <double> f);
 
 /*!

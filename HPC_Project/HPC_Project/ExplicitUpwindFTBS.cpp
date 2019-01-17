@@ -5,7 +5,12 @@ vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt,
 	Commons fx;																								//define fx as commons to use common varaible
 	vector <double> res;
 	const double c = (double)fx.u*Dt / fx.dx;																//define the value of c
+	
+	//------------
 	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
+	if (fx.getMyRank() == 0) {
+		cout << "THIS FIRST INDEX SHOULD BE ZERO: " << firstIndex << "\n";
+	}
 
 	//---CHANGING TO IF MY RANK == 0
 	//---if (firstIndex == 0)
@@ -14,17 +19,23 @@ vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt,
 	if (lastIndex > fx.numberOfPointsPerResult() - 1)
 		lastIndex = fx.numberOfPointsPerResult() - 1;
 
-	cout << "NEXT RESULT SHOULD BE:\n";
+	//cout << "NEXT RESULT SHOULD BE:\n";
+
+	//------
+	if (firstIndex > 0)
+		firstIndex--;
+	//------
+
 	for (int xIndex = firstIndex; xIndex <= lastIndex; xIndex++) {																					//create loop while x is lower than Xtot (400)
 		res.push_back(((1 - c)*previousSolution[xIndex] + c * previousSolution[xIndex - 1]));				//add the value of the scheme to the vector res
 
-		if (fx.getMyRank() == 1) { // && (previousSolution[xIndex]!=0|| previousSolution[xIndex - 1]!=0)
+		/*if (fx.getMyRank() == 1) { // && (previousSolution[xIndex]!=0|| previousSolution[xIndex - 1]!=0)
 			cout << res.back() << "; ";
-		}
+		}*/
 	}
 
 
-	cout << "\n";
+	/*cout << "\n";
 
 	if (fx.getMyRank() == 1) {
 		cout << "RANK 1 PREVIOUS SOLUTION\n";
@@ -33,7 +44,7 @@ vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt,
 		fx.showVector(res);
 		//cout << "last Index: " << lastIndex << "\n";
 		//cout << "1st Index: " << firstIndex << "\n";
-	}
+	}*/
 
 	return res;																								//return the vector of double res
 }
@@ -42,7 +53,7 @@ vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt,
 vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previousSolution, double Dt) {		//declaration of the only function of the class which return a vector of the value of f at n+1
 	Commons fx;
 	vector <double> res(fx.numberOfPointsPerProcessor(), 99);
-	vector <double> finalRes(fx.numberOfPointsPerResult(), 10);
+	vector <double> finalRes(fx.numberOfPointsPerResult(), 88);
 	const double c = (double)fx.u*Dt / fx.dx;																//define the value of c
 	double firstValue;
 	int lastIndex;
@@ -80,14 +91,8 @@ vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previou
 		MPI_Recv(&firstValue, 1, MPI_DOUBLE, fx.getMyRank() - 1, 1, MPI_COMM_WORLD, &status);
 	}
 
-	for (int i = 0;i < fx.getNpes();i++) {
-		if (allProcessorsFinished[i] == false)
-			cout << "BAD IS " << i <<"\n";
-	}
-	if (allProcessorsFinished[0] == true && allProcessorsFinished[1] == true)
-		cout << "BOTH OK\n";
 
-	MPI_Allgather(res.data(), (int)(fx.numberOfPointsPerResult() / fx.getNpes()), MPI_DOUBLE, finalRes.data(), (int)(fx.numberOfPointsPerResult() / fx.getNpes()), MPI_DOUBLE, MPI_COMM_WORLD);
+	MPI_Allgather(res.data(), res.size(), MPI_DOUBLE, finalRes.data(), finalRes.size(), MPI_DOUBLE, MPI_COMM_WORLD);
 
 	return finalRes;
 }

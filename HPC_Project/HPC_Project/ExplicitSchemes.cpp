@@ -15,11 +15,19 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 		double n = 0;																							//initate a double n at 0
 		while (n <= 0.52) {																						//create loop until n <0.5
 			
-			/*if (fx.getMyRank() == 0) {
+			// TO DO: Show analytical solution !!!
+
+			cout << "NUMERICAL SOLUTION\n";
+			if (fx.getMyRank() == 0) {
 				cout << "n = " << n << "\n";
 				fx.showVector(solution); // Show the numerical solution
+			}
+			
+			/*cout << "ANALYTICAL SOLUTION\n";
+			if (fx.getMyRank() == 0) {
+				cout << "n = " << n << "\n";
+				fx.showVector(fx.analyticalSolution(n)); // Show the numerical solution
 			}*/
-					
 			
 			
 			for (unsigned int i = 0; i < solution.size();i++)													//create a loop with i which will be used as an index
