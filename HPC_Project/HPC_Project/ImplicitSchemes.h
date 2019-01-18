@@ -38,7 +38,7 @@ public:
 	int numberOfPointsPerResult(Matrix A);
 	int numberOfPointsPerProcessor(Matrix A);
 
-	vector <double> ThomasAlgorithmUntiln(Matrix A, vector <double> f, double firstValue, int lastIndex);
+	vector <double> ThomasAlgorithmUntiln(Matrix A, vector <double> f, int lastIndex);
 	vector <double> ThomasAlgorithm(Matrix A, vector <double> f);
 
 /*!

@@ -85,13 +85,11 @@ vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {		
 	vector <double> x(numberOfPointsPerProcessor(A), 99);
 	vector <double> finalX(numberOfPointsPerResult(A), 88);
 
-
-
-
-	x = ThomasAlgorithmUntiln(A, f, firstValue, lastIndex);
+	/*
+	x = ThomasAlgorithmUntiln(A, f, lastIndex);
 	
 	MPI_Allgather(x.data(), x.size(), MPI_DOUBLE, finalX.data(), finalX.size(), MPI_DOUBLE, MPI_COMM_WORLD);
-
+	*/
 
 	return x;																							//return vector x
 }

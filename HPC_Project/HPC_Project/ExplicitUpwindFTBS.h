@@ -23,7 +23,7 @@ public:
  *  \param Dt Delta t
  *  \return Return a vector of the solution at time n + 1
  */
-	vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt, double firstValue, int lastIndex);
+	vector<double> ExplicitSchemeUntiln(vector <double> previousSolution, double Dt, int lastIndex);
 	vector<double> ExplicitScheme_nplus1(vector <double> previousSolution, double Dt);
 
 private:
