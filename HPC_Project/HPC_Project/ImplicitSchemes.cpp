@@ -77,13 +77,20 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 
 
 
-vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {																	//declare a vector dPrime
+vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {	
+	Commons fx;
 	double firstValue;
 	int lastIndex;
 	//vector <double> x(lastIndex+1, 99);
 	// CHECK THAT first LAST INDEX+1 == number of points per proc
 	vector <double> x(numberOfPointsPerProcessor(A), 99);
 	vector <double> finalX(numberOfPointsPerResult(A), 88);
+
+	lastIndex = (int)(fx.getMyRank() + 1)*(fx.numberOfPointsPerProcessor()) - 1;
+
+	if (lastIndex <= 0)
+		cout << "The problem is too little for the number of processors used!\n";
+
 
 	/*
 	x = ThomasAlgorithmUntiln(A, f, lastIndex);

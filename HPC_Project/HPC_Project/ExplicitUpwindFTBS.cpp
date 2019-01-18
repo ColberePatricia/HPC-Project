@@ -3,50 +3,65 @@
 
 vector<double> ExplicitUpwindFTBS::ExplicitSchemeUntiln(vector <double> previousSolution, double Dt, int lastIndex) {		//declaration of the only function of the class which return a vector of the value of f at n+1
 	Commons fx;																								//define fx as commons to use common varaible
-	vector <double> res(fx.numberOfPointsPerProcessor()+1, 99);
 	const double c = (double)fx.u*Dt / fx.dx;																//define the value of c
-	
+	int resIndex = 0;
+	//vector <double> res(fx.numberOfPointsPerProcessor()+1, 99);
 	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
 	
-	//------------
-	if (fx.getMyRank() == 0) {
-		cout << "THIS FIRST INDEX SHOULD BE ZERO: " << firstIndex << "\n";
-	}
 
 	//---CHANGING TO IF MY RANK == 0
-	//---if (firstIndex == 0)
 	//res.push_back(((1 - c)*previousSolution[0] + c * fx.fboundaryLeft()));
-	res[0] = (((1 - c)*previousSolution[0] + c * fx.fboundaryLeft()));
+	
 
 	if (lastIndex > fx.numberOfPointsPerResult() - 1)
 		lastIndex = fx.numberOfPointsPerResult() - 1;
 
-	//------ SHOULD BE CHANGED
-	if (firstIndex > 0)
-		firstIndex--;
-	//------
-
-	int resIndex = 1;
-	for (int xIndex = firstIndex; xIndex <= lastIndex; xIndex++) {																					//create loop while x is lower than Xtot (400)
-		res[resIndex] = (((1 - c)*previousSolution[xIndex] + c * previousSolution[xIndex - 1]));				//add the value of the scheme to the vector res
-		resIndex++;
-
-		/*if (fx.getMyRank() == 1) { // && (previousSolution[xIndex]!=0|| previousSolution[xIndex - 1]!=0)
-			cout << res.back() << "; ";
-		}*/
+	if (lastIndex > previousSolution.size() - 1) {
+		cout << "LAST INDEX TOO BIG: " << lastIndex << "\n";
+		cout << "PREV SOL SIZE: " << previousSolution.size() << "\n";
+		lastIndex = previousSolution.size() - 1;
 	}
 
+	//------ SHOULD BE CHANGED-------------
+	//if (firstIndex > 0)
+	//	firstIndex--;
+	//------
 
-	/*cout << "\n";
+
+	vector <double> res(lastIndex - firstIndex, 99);
+
+	//---
+	if (firstIndex == 0) {
+		res[0] = (1 - c)*previousSolution[0] + c * fx.fboundaryLeft();
+		resIndex++;
+	}
+
+	
+	for (int xIndex = firstIndex; xIndex <= lastIndex; xIndex++) {																					//create loop while x is lower than Xtot (400)
+		res[resIndex] = (1 - c)*previousSolution[xIndex] + c * previousSolution[xIndex - 1];				//add the value of the scheme to the vector res
+		resIndex++;
+	}
+
+	//if (res.size() != 401)
+	//	cout << "The wrong size is from the rank: " << fx.getMyRank() << "\n";
+
+	if (fx.getMyRank() == 0) {
+		cout << "RANK 0\n";
+		cout << "FIRST INDEX: " << firstIndex << "\n";//0
+		cout << "RES SIZE SHOULD BE: " << resIndex-1 << "\n";//401
+		cout << "RES SIZE IS: " << res.size() << "\n";//400
+		cout << "FIRST INDEX - LAST INDEX: " << firstIndex - lastIndex << "\n";
+	}
 
 	if (fx.getMyRank() == 1) {
-		cout << "RANK 1 PREVIOUS SOLUTION\n";
-		fx.showVector(previousSolution);
-		cout << "NEXT RESULT\n";
-		fx.showVector(res);
-		//cout << "last Index: " << lastIndex << "\n";
-		//cout << "1st Index: " << firstIndex << "\n";
-	}*/
+		cout << "RANK 1\n";
+		cout << "FIRST INDEX: " << firstIndex << "\n";
+		cout << "RES SIZE SHOULD BE: " << resIndex << "\n";
+		cout << "RES SIZE IS: " << res.size() << "\n";
+	}
+
+	cout << "SIZE PER PROC: " << fx.numberOfPointsPerProcessor() << "\n";//401
+	cout << "SIZE TOTAL: " << fx.numberOfPointsPerResult() << "\n";//800
 
 	return res;																								//return the vector of double res
 }
@@ -55,11 +70,15 @@ vector<double> ExplicitUpwindFTBS::ExplicitSchemeUntiln(vector <double> previous
 vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previousSolution, double Dt) {		//declaration of the only function of the class which return a vector of the value of f at n+1
 	Commons fx;
 	vector <double> res(fx.numberOfPointsPerProcessor()+1, 99);
-	// CHANGEEEE ????
-	vector <double> finalRes(fx.numberOfPointsPerResult()+5, 88);
+	vector <double> finalRes((fx.numberOfPointsPerProcessor() + 1)*fx.getNpes(), 88);
 	const double c = (double)fx.u*Dt / fx.dx;																//define the value of c
 	int lastIndex;
 	vector <bool> allProcessorsFinished(fx.getNpes(), false);
+
+	vector <int> displs(fx.getNpes());
+	vector <int> recv_counts(fx.getNpes());
+
+
 
 	/*if (fx.getMyRank() != 0) { // If I'm not the first processor, I need to receive the first value
 		MPI_Status status;
@@ -69,7 +88,11 @@ vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previou
 	else
 		firstValue = ((1 - c)*previousSolution[0] + c * fx.fboundaryLeft());*/
 
-	lastIndex = (int)(fx.getMyRank() + 1)*(fx.numberOfPointsPerProcessor());
+	lastIndex = (int)(fx.getMyRank() + 1)*(fx.numberOfPointsPerProcessor()) - 1;
+	
+	if (lastIndex <= 0)
+		cout << "The problem is too little for the number of processors used!\n";
+
 
 	res = ExplicitSchemeUntiln(previousSolution, Dt, lastIndex);
 
@@ -93,10 +116,18 @@ vector<double> ExplicitUpwindFTBS::ExplicitScheme_nplus1(vector <double> previou
 		MPI_Recv(&firstValue, 1, MPI_DOUBLE, fx.getMyRank() - 1, 1, MPI_COMM_WORLD, &status);
 	}*/
 
-	// ???????????????????????????????????????????????
-	MPI_Allgather(res.data(), res.size(), MPI_DOUBLE, finalRes.data(), finalRes.size(), MPI_DOUBLE, MPI_COMM_WORLD);
+	cout << "RES SIZE IN GATHER: " << res.size()<<"\n";
+	//MPI_Allgather(res.data(), res.size(), MPI_DOUBLE, finalRes.data(), finalRes.size(), MPI_DOUBLE, MPI_COMM_WORLD);
+
+	for (int i = 0; i < fx.getNpes(); i++) {
+		displs[i] = i * fx.numberOfPointsPerProcessor() * fx.getNpes();
+		recv_counts[i] = res.size();
+	}
+
+	MPI_Allgatherv(res.data(), res.size(), MPI_DOUBLE, finalRes.data(), recv_counts.data(), displs.data(), MPI_DOUBLE, MPI_COMM_WORLD);
 
 	return finalRes;
+	//return res;
 }
 
 
