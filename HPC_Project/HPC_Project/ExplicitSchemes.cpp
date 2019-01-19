@@ -14,10 +14,8 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 		vector <double> error(solution.size());																	//create a vector of double error which has the same size of the solution
 		double n = 0;																							//initate a double n at 0
 		while (n <= 0.52) {																						//create loop until n <0.5
-			
-			// TO DO: Show analytical solution !!!
 
-			cout << "NUMERICAL SOLUTION\n";
+			//cout << "NUMERICAL SOLUTION\n";
 			if (fx.getMyRank() == 0) {
 				cout << "n = " << n << "\n";
 				fx.showVector(solution); // Show the numerical solution
@@ -29,13 +27,15 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 				fx.showVector(fx.analyticalSolution(n)); // Show the numerical solution
 			}*/
 			
-			
+
+			//cout << "SOL SIZE = " << solution.size() << "\n";
+			//cout << "ANALI SOL SIZE= " << fx.analyticalSolution(n).size() << "\n";
 			for (unsigned int i = 0; i < solution.size();i++)													//create a loop with i which will be used as an index
 				error[i] = solution[i] - fx.analyticalSolution(n)[i];											//set to the vector at index i the diffrence between the solution and the analytical solution
 			
 			if (fx.getMyRank() == 0) {
-				//cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";			//Print the result of the uniform norm
-				//cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
+				cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";			//Print the result of the uniform norm
+				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
 			}
 
 			/*if (fx.getMyRank() == 0) {

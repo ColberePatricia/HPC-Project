@@ -17,11 +17,18 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	vector <double> bPrime(sizeOfA);																	//declare a vector bPrime
 	vector <double> dPrime(sizeOfA);																	//declare a vector dPrime
 	//---------------
-	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
+	/*int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
 
 	if (lastIndex > numberOfPointsPerResult(A) - 1)
 		lastIndex = numberOfPointsPerResult(A) - 1;
 	//----CHECK THE 1st INDEX OF EACH PROCESSOR
+
+	if (lastIndex > sizeOfA - 1) {
+		cout << "LAST INDEX TOO BIG: " << lastIndex << "\n";
+		cout << "PREV SOL SIZE: " << sizeOfA << "\n";
+		lastIndex = sizeOfA - 1;
+	}
+
 
 	// We create vectors from the non null coefficients of the matrix
 	vector <double> a(fx.numberOfPointsPerProcessor());																			//declare a vector a
@@ -71,7 +78,7 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	x[lastIndex] = dPrime[lastIndex] / bPrime[lastIndex];											//set x at index sizeOfA - 1
 	for (int i = lastIndex-1; i >= 0; i--)																//create a loop in reverse, the index i start at sizeOfA and decrease until reach 0
 		x[i] = (dPrime[i] - c[i] * x[i + 1]) / bPrime[i];												//set x at index i
-
+		*/
 	return x;																							//return vector x
 }
 
