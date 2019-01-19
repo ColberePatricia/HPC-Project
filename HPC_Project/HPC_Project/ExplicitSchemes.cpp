@@ -16,7 +16,7 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 		while (n <= 0.52) {																						//create loop until n <0.5
 
 			//cout << "NUMERICAL SOLUTION\n";
-			if (fx.getMyRank() == 0) {
+			if (fx.getMyRank() == 0 && (n == 0 || fabs(n - 0.1) < 0.001 || fabs(n - 0.2) < 0.001 || fabs(n - 0.3) < 0.001 || fabs(n - 0.4) < 0.001 || fabs(n - 0.5) < 0.001)) {
 				cout << "n = " << n << "\n";
 				fx.showVector(solution); // Show the numerical solution
 			}
@@ -28,29 +28,17 @@ void ExplicitScheme::resultDt(const double Dt) {																//declare the on
 			}*/
 			
 
-			//cout << "SOL SIZE = " << solution.size() << "\n";
-			//cout << "ANALI SOL SIZE= " << fx.analyticalSolution(n).size() << "\n";
 			for (unsigned int i = 0; i < solution.size();i++)													//create a loop with i which will be used as an index
 				error[i] = solution[i] - fx.analyticalSolution(n)[i];											//set to the vector at index i the diffrence between the solution and the analytical solution
 			
-			if (fx.getMyRank() == 0) {
+			if (fx.getMyRank() == 0 && (n == 0 || fabs(n - 0.1) < 0.001 || fabs(n - 0.2) < 0.001 || fabs(n - 0.3) < 0.001 || fabs(n - 0.4) < 0.001 || fabs(n - 0.5) < 0.001)) {
 				cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";			//Print the result of the uniform norm
 				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";				//Print the result of the norm two
 			}
 
-			/*if (fx.getMyRank() == 0) {
-				cout << "OLD SOLUTION\n";
-				fx.showVector(solution);
-			}*/
-
 			solution = ExplicitScheme_nplus1(solution, Dt);														//call the function which calculate the solution at n+1
 			n += Dt;																							//add delta t to n
 
-			/*if (fx.getMyRank() == 0) {
-				cout << "NEW SOLUTION\n";
-				fx.showVector(solution);
-			}*/
-			//MPI_Bcast(solution.data(), solution.size(), MPI_INT, 0, MPI_COMM_WORLD);
 		}
 	}
 	else {																										//if the CFL condition is not fulfilled =>

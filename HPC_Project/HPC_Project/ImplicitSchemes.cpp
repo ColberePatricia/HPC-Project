@@ -1,97 +1,104 @@
 #include "ImplicitSchemes.h"																			//include the header of the class
 
-int ImplicitScheme::numberOfPointsPerResult(Matrix A) {
+int ImplicitScheme::numberOfPointsPerResult(Matrix A) {													//gives the number of points in each result vector for each time step
 	A.getNcols();
 }
 
-int ImplicitScheme::numberOfPointsPerProcessor(Matrix A) {
+int ImplicitScheme::numberOfPointsPerProcessor(Matrix A) {												//gives us the number of points in each results for one processor
 	Commons fx;
 	return (int)((numberOfPointsPerResult(A) / fx.getNpes()) + 1);
 }
 
-vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> f, int lastIndex) {							//declare the function which handle the thomas algorithm
+vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> f, int lastIndex) {		//thomas algorithm function to the lastIndex for numberOfPointsPerProcessor points
 	Commons fx;
-	int sizeOfA = A.getNcols();																			//declare an int x to the number of columunm of the matrix A
-	vector <double> x(sizeOfA);																			//declare a vector x
-	vector <double> m(sizeOfA);																			//declare a vector m
-	vector <double> bPrime(sizeOfA);																	//declare a vector bPrime
-	vector <double> dPrime(sizeOfA);																	//declare a vector dPrime
-	//---------------
-	/*int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
+	int sizeOfA = A.getNcols();
+	vector <double> m;																					//declare the vectors m for the algorithm
+	vector <double> bPrime;
+	vector <double> dPrime;
+	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
 
-	if (lastIndex > numberOfPointsPerResult(A) - 1)
-		lastIndex = numberOfPointsPerResult(A) - 1;
-	//----CHECK THE 1st INDEX OF EACH PROCESSOR
+	if (lastIndex > fx.numberOfPointsPerResult() - 1)													//Check that lastIndex is not bigger than the size of the final result
+		lastIndex = fx.numberOfPointsPerResult() - 1;
 
-	if (lastIndex > sizeOfA - 1) {
-		cout << "LAST INDEX TOO BIG: " << lastIndex << "\n";
-		cout << "PREV SOL SIZE: " << sizeOfA << "\n";
+	if (lastIndex > sizeOfA - 1) {																		//Check that lastIndex is not bigger than the size of A
+		cout << "The last index is too big: " << lastIndex << "\n";
+		cout << "The size of A is: " << sizeOfA << "\n";
 		lastIndex = sizeOfA - 1;
 	}
 
+	
+	vector <double> a;																					// We create vectors from the non null coefficients of the matrix
+	vector <double> b;
+	vector <double> c;
 
-	// We create vectors from the non null coefficients of the matrix
-	vector <double> a(fx.numberOfPointsPerProcessor());																			//declare a vector a
-	vector <double> b(fx.numberOfPointsPerProcessor());																			//declare a vector b
-	vector <double> c(fx.numberOfPointsPerProcessor());																			//declare a vector c
+	if (firstIndex == 0)																				//put first value of a
+		a.push_back(0);
 
-
-	for (int i = firstIndex; i <= lastIndex; i++) {																	//create a loop with an index i until i reach the sizeofA
-		b[i-firstIndex] = A[i-firstIndex][i-firstIndex];																					//set the vector b at the index i the value of the matrix A at [i][i]
-		if (i > 0)																						//if i higher than 0 =>
-			a[i-firstIndex] = A[i-firstIndex][i-firstIndex - 1];																			//set the vector a at the index i the value of the matrix A at [i][i-1]
-		if (i < sizeOfA - 1)																				//if i is lower than sizeOfA - 1 =>
-			c[i-firstIndex] = A[i-firstIndex][i-firstIndex + 1];																			//set the vector c at the index i the value of the matrix A at [i][i+1]
-	}
-	//--a[0] = 0;																							//set the first value of a to 0
-	//--c[sizeOfA - 1] = 0;																					//set last value of c to 0
-
-	//-----
-	if (fx.getMyRank() == 0)
-		a[0] = 0;
-	//else
-		//a[0] = A[i][i - 1];
-
-	if (fx.getMyRank() == fx.getNpes()-1)
-		c[sizeOfA - 1] = 0;
-	//else
-		//c[sizeOfA - 1] = A[i][i + 1];
-
-
-
-	// First values of the vectors
-	m[0] = 0;																							//set the first value of m to 0
-	m[1] = a[1] / b[0];																					//set the second value of m to the second value of a divided by the first value of b
-	bPrime[0] = b[0];																					//set the first value of bPrime to the fisrt value of b
-	dPrime[0] = f[0];																					//set the first value of dPrime to the fisrt value of f
-
-	// We calculate all values of the vectors
-	for (int i = firstIndex+1; i <= lastIndex; i++) {																	//create a loop with an index i until i reach sizeOfA
-		bPrime[i-firstIndex] = b[i-firstIndex] - m[i-firstIndex] * c[i-firstIndex - 1];																//set bPrime at index i
-		dPrime[i-firstIndex] = f[i-firstIndex] - m[i-firstIndex] * dPrime[i-firstIndex - 1];														//set dPrime at index i
-		if (i <= lastIndex - 1)																			//if i is lower than sizeOfA - 1 =>
-			m[i-firstIndex + 1] = a[i-firstIndex + 1] / bPrime[i-firstIndex];															//set m at index i+1
+	for (int i = firstIndex; i <= lastIndex; i++) {														//Use the thomas algorithm to calculate a, b and c vectors
+		b.push_back(A[i][i]);
+		if (i > 0)
+			a.push_back(A[i][i - 1]);
+		if (i < sizeOfA - 1)
+			c.push_back(A[i][i + 1]);
 	}
 
-	//--- LAST last index should be sizeOfA-1
+	if (lastIndex == sizeOfA - 1)																		//put last value of c
+		c.push_back(0);
 
-	x[lastIndex] = dPrime[lastIndex] / bPrime[lastIndex];											//set x at index sizeOfA - 1
-	for (int i = lastIndex-1; i >= 0; i--)																//create a loop in reverse, the index i start at sizeOfA and decrease until reach 0
-		x[i] = (dPrime[i] - c[i] * x[i + 1]) / bPrime[i];												//set x at index i
-		*/
-	return x;																							//return vector x
+
+
+
+	// First values of the vectors m bPrime and dPrime
+	// The first value of m is never used so we can give it the value zero like m[0] of a sequential program
+	m.push_back(0);
+	m.push_back(a[1] / b[0]);
+	bPrime.push_back(b[0]);
+	dPrime.push_back(f[firstIndex]);
+
+	int bPrimeIndex = 1;
+	for (int i = firstIndex+1; i <= lastIndex; i++) {													// We calculate all values of the vectors m, bPrime and dPrime according to the thomas algorithm
+		bPrime.push_back(b[bPrimeIndex] - m[bPrimeIndex] * c[bPrimeIndex - 1]);
+		dPrime.push_back(f[i] - m[bPrimeIndex] * dPrime[bPrimeIndex - 1]);
+		if (i <= lastIndex - 1)
+			m.push_back(a[bPrimeIndex + 1] / bPrime[bPrimeIndex]);
+		bPrimeIndex++;
+	}
+
+
+	vector <double> x(bPrime.size(), 8888);																// x will contain the result for a processor
+
+	if (bPrime[lastIndex - firstIndex] == 0) {
+		cout << "Attempting to divide by zero!!\n";
+		return x;
+	}
+	else {
+		x[lastIndex-firstIndex] = dPrime[lastIndex - firstIndex] / bPrime[lastIndex - firstIndex];		//last value of x
+		for (int i = lastIndex - 1; i >= firstIndex; i--) {
+			if (bPrime[i - firstIndex] == 0) {
+				cout << "Attempting to divide by zero!\n";
+				return x;
+			}
+			else
+				x[i - firstIndex] = (dPrime[i - firstIndex] - c[i-firstIndex] * x[i - firstIndex + 1]) / bPrime[i - firstIndex];	//we finish calculating x
+		}
+	}
+
+	while (x.size() < fx.numberOfPointsPerProcessor())													//the last processor can have fewer points than the others so we add fake values that we will truncate later
+		x.push_back(0);
+
+
+	return x;																							//we return the result calculated by one processor
 }
 
 
 
-vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {	
+vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {							//thomas algorithm that gives a result coming from all the processors
 	Commons fx;
-	double firstValue;
-	int lastIndex;
-	//vector <double> x(lastIndex+1, 99);
-	// CHECK THAT first LAST INDEX+1 == number of points per proc
-	vector <double> x(numberOfPointsPerProcessor(A), 99);
-	vector <double> finalX(numberOfPointsPerResult(A), 88);
+	int lastIndex;																						//lastIndex is the last index handled by one processor
+	vector <double> x(numberOfPointsPerProcessor(A), 99);												//x will contain the individual results of each processor
+
+	vector <int> displs;																				//displs and recv_counts will be used for MPI_Gatherv
+	vector <int> recv_counts;
 
 	lastIndex = (int)(fx.getMyRank() + 1)*(fx.numberOfPointsPerProcessor()) - 1;
 
@@ -99,13 +106,21 @@ vector <double> ImplicitScheme::ThomasAlgorithm(Matrix A, vector <double> f) {
 		cout << "The problem is too little for the number of processors used!\n";
 
 
-	/*
-	x = ThomasAlgorithmUntiln(A, f, lastIndex);
-	
-	MPI_Allgather(x.data(), x.size(), MPI_DOUBLE, finalX.data(), finalX.size(), MPI_DOUBLE, MPI_COMM_WORLD);
-	*/
+	x = ThomasAlgorithmUntiln(A, f, lastIndex);															//we get the individual solution of a processor
 
-	return x;																							//return vector x
+	vector <double> finalX(x.size()*fx.getNpes(), 88);													//contains the total solution from all the processors
+
+	for (int i = 0; i < fx.getNpes(); i++) {
+		displs.push_back(i * x.size());
+		recv_counts.push_back(x.size());
+	}
+	
+	MPI_Allgatherv(x.data(), x.size(), MPI_DOUBLE, finalX.data(), recv_counts.data(), displs.data(), MPI_DOUBLE, MPI_COMM_WORLD); //get all individual solution
+
+	if (finalX.size() != numberOfPointsPerResult(A))													//We truncate the last values of the result that  were added for a simplification of the gather but are meaningless
+		finalX.resize(numberOfPointsPerResult(A));
+
+	return finalX;																						//return the actual solution
 }
 
 void ImplicitScheme::resultDt(const double Dt) {														//declare the function resultDt wich is called in the main class
@@ -114,21 +129,23 @@ void ImplicitScheme::resultDt(const double Dt) {														//declare the func
 	if (fx.u*Dt / fx.dx <= 1) {																			//if the CFL condition is fulfilled =>
 		vector<double> solution;																		//create a vector of double solution
 		if (fx.getMyRank() == 0) {
+			cout << "Delta t: " << Dt << "\n";
 		}
+
 		solution = fx.finit();																			//affect the vector from the function finit in commons to solution
 		vector <double> error(solution.size());															//create a vector of double error which has the same size as solution 
 		double n = 0;																					//create a double n equal to 0
 		while (n <= 0.52) {																				//create a loop while n is lower than 0.5 plus dx
-			if (fx.getMyRank() == 0) {
+			if (fx.getMyRank() == 0 && (n == 0 || fabs(n - 0.1) < 0.001 || fabs(n - 0.2) < 0.001 || fabs(n - 0.3) < 0.001 || fabs(n - 0.4) < 0.001 || fabs(n - 0.5) < 0.001)) {
 				cout << "n = " << n << "\n";																//print the value of n
 				fx.showVector(solution);																	//print the value of the vector solution
 
 			}
-
+			
 			for (unsigned int i = 0; i < solution.size(); i++)											//create a loop with an index i until i reach the size of solution
 				error[i] = solution[i] - fx.analyticalSolution(n)[i];									//set the error at index i the differrence between the solution and the analytical solution
 			
-			if (fx.getMyRank() == 0) {
+			if (fx.getMyRank() == 0 && (n == 0 || fabs(n - 0.1) < 0.001 || fabs(n - 0.2) < 0.001 || fabs(n - 0.3) < 0.001 || fabs(n - 0.4) < 0.001 || fabs(n - 0.5) < 0.001)) {
 				cout << "Max norm of the error for n = " << n << ":\n" << fx.uniform_norm(error) << "\n";	//print the value of the norm unifrom apply to error
 				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";		//print the value of the norm two apply to error
 			}
@@ -147,48 +164,3 @@ void ImplicitScheme::resultDt(const double Dt) {														//declare the func
 }
 
 
-/*
-vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> f, double firstValue, int lastIndex) {							//declare the function which handle the thomas algorithm
-	int sizeOfA = A.getNcols();																			//declare an int x to the number of columunm of the matrix A
-	vector <double> x(sizeOfA);																			//declare a vector x
-	vector <double> m(sizeOfA);																			//declare a vector m
-	vector <double> bPrime(sizeOfA);																	//declare a vector bPrime
-	vector <double> dPrime(sizeOfA);																	//declare a vector dPrime
-
-	// We create vectors from the non null coefficients of the matrix
-	vector <double> a(sizeOfA);																			//declare a vector a
-	vector <double> b(sizeOfA);																			//declare a vector b
-	vector <double> c(sizeOfA);																			//declare a vector c
-																										//all of this vector have the same size which is sizeofA
-	for (int i = 0; i < sizeOfA; i++) {																	//create a loop with an index i until i reach the sizeofA
-		b[i] = A[i][i];																					//set the vector b at the index i the value of the matrix A at [i][i]
-		if (i > 0)																						//if i higher than 0 =>
-			a[i] = A[i][i - 1];																			//set the vector a at the index i the value of the matrix A at [i][i-1]
-		if (i < sizeOfA - 1)																				//if i is lower than sizeOfA - 1 =>
-			c[i] = A[i][i + 1];																			//set the vector c at the index i the value of the matrix A at [i][i+1]
-	}
-	a[0] = 0;																							//set the first value of a to 0
-	c[sizeOfA - 1] = 0;																					//set last value of c to 0
-
-
-	// First values of the vectors
-	m[0] = 0;																							//set the first value of m to 0
-	m[1] = a[1] / b[0];																					//set the second value of m to the second value of a divided by the first value of b
-	bPrime[0] = b[0];																					//set the first value of bPrime to the fisrt value of b
-	dPrime[0] = f[0];																					//set the first value of dPrime to the fisrt value of f
-
-	// We calculate all values of the vectors
-	for (int i = 1; i < sizeOfA; i++) {																	//create a loop with an index i until i reach sizeOfA
-		bPrime[i] = b[i] - m[i] * c[i - 1];																//set bPrime at index i
-		dPrime[i] = f[i] - m[i] * dPrime[i - 1];														//set dPrime at index i
-		if (i < sizeOfA - 1)																			//if i is lower than sizeOfA - 1 =>
-			m[i + 1] = a[i + 1] / bPrime[i];															//set m at index i+1
-	}
-
-	x[sizeOfA - 1] = dPrime[sizeOfA - 1] / bPrime[sizeOfA - 1];											//set x at index sizeOfA - 1
-	for (int i = sizeOfA - 2; i >= 0; i--)																//create a loop in reverse, the index i start at sizeOfA and decrease until reach 0
-		x[i] = (dPrime[i] - c[i] * x[i + 1]) / bPrime[i];												//set x at index i
-
-	return x;																							//return vector x
-}
-*/
