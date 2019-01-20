@@ -15,6 +15,8 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	vector <double> m;																					//declare the vectors m for the algorithm
 	vector <double> bPrime;
 	vector <double> dPrime;
+	double nextDPrime;																					//value of dPrime sent to the next processor
+	double nextBPrime;																					//value of bPrime sent to the next processor
 	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
 
 	if (lastIndex > fx.numberOfPointsPerResult() - 1)													//Check that lastIndex is not bigger than the size of the final result
@@ -26,7 +28,7 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 		lastIndex = sizeOfA - 1;
 	}
 
-	
+
 	vector <double> a;																					// We create vectors from the non null coefficients of the matrix
 	vector <double> b;
 	vector <double> c;
@@ -34,7 +36,13 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	if (firstIndex == 0)																				//put first value of a
 		a.push_back(0);
 
-	for (int i = firstIndex; i <= lastIndex; i++) {														//Use the thomas algorithm to calculate a, b and c vectors
+	int lastABCindex;
+	if (fx.getMyRank() != fx.getNpes() - 1)																//if this is not the last processor, we will need one more value to send the next first b and d prime
+		lastABCindex = lastIndex + 1;
+	else
+		lastABCindex = lastIndex;
+
+	for (int i = firstIndex; i <= lastABCindex; i++) {													//Use the thomas algorithm to calculate a, b and c vectors
 		b.push_back(A[i][i]);
 		if (i > 0)
 			a.push_back(A[i][i - 1]);
@@ -52,17 +60,32 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	// The first value of m is never used so we can give it the value zero like m[0] of a sequential program
 	m.push_back(0);
 	m.push_back(a[1] / b[0]);
-	bPrime.push_back(b[0]);
-	dPrime.push_back(f[firstIndex]);
 
-	int bPrimeIndex = 1;
-	for (int i = firstIndex+1; i <= lastIndex; i++) {													// We calculate all values of the vectors m, bPrime and dPrime according to the thomas algorithm
-		bPrime.push_back(b[bPrimeIndex] - m[bPrimeIndex] * c[bPrimeIndex - 1]);
-		dPrime.push_back(f[i] - m[bPrimeIndex] * dPrime[bPrimeIndex - 1]);
-		if (i <= lastIndex - 1)
-			m.push_back(a[bPrimeIndex + 1] / bPrime[bPrimeIndex]);
-		bPrimeIndex++;
+	if (firstIndex == 0) {
+		bPrime.push_back(b[0]);
+		dPrime.push_back(f[0]);
 	}
+	else {																								// If I'm not the first processor, I need to receive the first values of b and d prime
+		MPI_Status status;
+		MPI_Recv(&nextBPrime, 1, MPI_DOUBLE, fx.getMyRank() - 1, 1, MPI_COMM_WORLD, &status);
+		MPI_Recv(&nextDPrime, 1, MPI_DOUBLE, fx.getMyRank() - 1, 2, MPI_COMM_WORLD, &status);
+		bPrime.push_back(nextBPrime);
+		dPrime.push_back(nextDPrime);
+	}
+
+	for (int i = firstIndex+1; i <= lastIndex; i++) {													// We calculate all values of the vectors m, bPrime and dPrime according to the thomas algorithm
+		bPrime.push_back(b[i-firstIndex] - m[i - firstIndex] * c[i - firstIndex - 1]);
+		dPrime.push_back(f[i] - m[i - firstIndex] * dPrime[i - firstIndex - 1]);
+		m.push_back(a[i - firstIndex + 1] / bPrime[i - firstIndex]);
+	}
+
+	if (fx.getMyRank() != fx.getNpes() - 1 && fx.getNpes() != 1) {										// my rank is not the last, I need to send the value of the next b and d prime to the next processor
+		nextBPrime = b[lastIndex + 1 - firstIndex] - m[lastIndex + 1 - firstIndex] * c[lastIndex + 1 - firstIndex - 1];
+		nextDPrime = f[lastIndex + 1] - m[lastIndex + 1 - firstIndex] * dPrime[lastIndex + 1 - firstIndex - 1];
+		MPI_Send(&nextBPrime, 1, MPI_DOUBLE, fx.getMyRank() + 1, 1, MPI_COMM_WORLD);
+		MPI_Send(&nextDPrime, 1, MPI_DOUBLE, fx.getMyRank() + 1, 2, MPI_COMM_WORLD);
+	}
+
 
 
 	vector <double> x(bPrime.size(), 8888);																// x will contain the result for a processor
@@ -150,8 +173,8 @@ void ImplicitScheme::resultDt(const double Dt) {														//declare the func
 				cout << "Two norm of the error for n = " << n << ":\n" << fx.two_norm(error) << "\n";		//print the value of the norm two apply to error
 			}
 
-
 			solution = ImplicitScheme_nplus1(solution, Dt);												//called the function which calculate the vector for f at n+1
+			
 			n += Dt;																					//add the value of delta t to n
 
 		}
