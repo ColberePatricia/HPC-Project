@@ -17,6 +17,7 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	vector <double> dPrime;
 	double nextDPrime;																					//value of dPrime sent to the next processor
 	double nextBPrime;																					//value of bPrime sent to the next processor
+	double nextM;
 	int firstIndex = lastIndex - fx.numberOfPointsPerProcessor() + 1;
 
 	if (lastIndex > fx.numberOfPointsPerResult() - 1)													//Check that lastIndex is not bigger than the size of the final result
@@ -58,20 +59,24 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 
 	// First values of the vectors m bPrime and dPrime
 	// The first value of m is never used so we can give it the value zero like m[0] of a sequential program
-	m.push_back(0);
-	m.push_back(a[1] / b[0]);
 
 	if (firstIndex == 0) {
 		bPrime.push_back(b[0]);
 		dPrime.push_back(f[0]);
+		m.push_back(0);
 	}
 	else {																								// If I'm not the first processor, I need to receive the first values of b and d prime
 		MPI_Status status;
 		MPI_Recv(&nextBPrime, 1, MPI_DOUBLE, fx.getMyRank() - 1, 1, MPI_COMM_WORLD, &status);
 		MPI_Recv(&nextDPrime, 1, MPI_DOUBLE, fx.getMyRank() - 1, 2, MPI_COMM_WORLD, &status);
+		MPI_Recv(&nextM, 1, MPI_DOUBLE, fx.getMyRank() - 1, 3, MPI_COMM_WORLD, &status);
 		bPrime.push_back(nextBPrime);
 		dPrime.push_back(nextDPrime);
+		m.push_back(nextM);
 	}
+
+	m.push_back(a[1] / b[0]);
+
 
 	for (int i = firstIndex+1; i <= lastIndex; i++) {													// We calculate all values of the vectors m, bPrime and dPrime according to the thomas algorithm
 		bPrime.push_back(b[i-firstIndex] - m[i - firstIndex] * c[i - firstIndex - 1]);
@@ -82,8 +87,10 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 	if (fx.getMyRank() != fx.getNpes() - 1 && fx.getNpes() != 1) {										// my rank is not the last, I need to send the value of the next b and d prime to the next processor
 		nextBPrime = b[lastIndex + 1 - firstIndex] - m[lastIndex + 1 - firstIndex] * c[lastIndex + 1 - firstIndex - 1];
 		nextDPrime = f[lastIndex + 1] - m[lastIndex + 1 - firstIndex] * dPrime[lastIndex + 1 - firstIndex - 1];
+		nextM = m.back();
 		MPI_Send(&nextBPrime, 1, MPI_DOUBLE, fx.getMyRank() + 1, 1, MPI_COMM_WORLD);
 		MPI_Send(&nextDPrime, 1, MPI_DOUBLE, fx.getMyRank() + 1, 2, MPI_COMM_WORLD);
+		MPI_Send(&nextM, 1, MPI_DOUBLE, fx.getMyRank() + 1, 3, MPI_COMM_WORLD);
 	}
 
 
@@ -108,7 +115,6 @@ vector <double> ImplicitScheme::ThomasAlgorithmUntiln(Matrix A, vector <double> 
 
 	while (x.size() < fx.numberOfPointsPerProcessor())													//the last processor can have fewer points than the others so we add fake values that we will truncate later
 		x.push_back(0);
-
 
 	return x;																							//we return the result calculated by one processor
 }
